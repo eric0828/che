@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.eclipse.che.ide.api.constraints.ActionConstraints;
 import org.eclipse.che.ide.api.machine.events.WsAgentStateEvent;
 import org.eclipse.che.ide.api.machine.events.WsAgentStateHandler;
 import org.eclipse.che.ide.api.project.ProjectServiceClient;
@@ -50,6 +51,7 @@ import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 import org.eclipse.che.ide.api.project.node.HasStorablePath;
 import org.eclipse.che.ide.api.resources.VirtualFile;
 import org.eclipse.che.ide.api.editor.texteditor.HasReadOnlyProperty;
+import org.eclipse.che.ide.part.editor.multipart.EditorMultiPartConstraints;
 import org.eclipse.che.ide.project.event.ResourceNodeDeletedEvent;
 import org.eclipse.che.ide.project.event.ResourceNodeRenamedEvent;
 import org.eclipse.che.ide.project.node.FileReferenceNode;
@@ -61,6 +63,7 @@ import org.eclipse.che.ide.resource.Path;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import org.eclipse.che.ide.rest.Unmarshallable;
+import org.eclipse.che.ide.util.loging.Log;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -70,7 +73,7 @@ import java.util.List;
 
 import static org.eclipse.che.ide.api.event.FileEvent.FileOperation.CLOSE;
 import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode.FLOAT_MODE;
-import static org.eclipse.che.ide.api.parts.PartStackType.EDITING;
+import static org.eclipse.che.ide.api.parts.PartStackType.MULTI_EDITING;
 
 /** @author Evgen Vidolob */
 @Singleton
@@ -284,7 +287,12 @@ public class EditorAgentImpl implements EditorAgent {
     /** {@inheritDoc} */
     @Override
     public void openEditor(@NotNull final VirtualFile file) {
-        doOpen(file, new OpenEditorCallbackImpl());
+        doOpen(file, new OpenEditorCallbackImpl(), false);
+    }
+
+    @Override
+    public void openEditor(@NotNull VirtualFile file, EditorMultiPartConstraints constraints) {
+        doOpen(file, null, constraints);
     }
 
     /** {@inheritDoc} */
@@ -298,23 +306,27 @@ public class EditorAgentImpl implements EditorAgent {
     /** {@inheritDoc} */
     @Override
     public void openEditor(@NotNull VirtualFile file, @NotNull OpenEditorCallback callback) {
-        doOpen(file, callback);
+        doOpen(file, callback, false);
     }
 
-    private void doOpen(final VirtualFile file, final OpenEditorCallback callback) {
+    private void doOpen(final VirtualFile file, final OpenEditorCallback callback, EditorMultiPartConstraints constraints) {
         EditorPartPresenter openedEditor = getOpenedEditor(Path.valueOf(file.getPath()));
-        if (openedEditor != null) {
-            workspace.setActivePart(openedEditor, EDITING);
-            callback.onEditorActivated(openedEditor);
-        } else {
+//        if (openedEditor != null) {
+//            workspace.setActivePart(openedEditor, MULTI_EDITING);
+//            callback.onEditorActivated(openedEditor);
+//        } else {
             FileType fileType = fileTypeRegistry.getFileTypeByFile(file);
             EditorProvider editorProvider = editorRegistry.getEditor(fileType);
             final EditorPartPresenter editor = editorProvider.getEditor();
 
             editor.init(new EditorInputImpl(fileType, file), callback);
             editor.addCloseHandler(editorClosed);
+        Log.error(getClass(), "======///// Active Editor" + getActiveEditor());
+        EditorMultiPartConstraints constraints = new EditorMultiPartConstraints(Dire, null);
 
-            workspace.openPart(editor, EDITING);
+
+
+            workspace.openPart(editor, MULTI_EDITING, constraints);
             openedEditors.add(editor);
 
             workspace.setActivePart(editor);
@@ -334,7 +346,7 @@ public class EditorAgentImpl implements EditorAgent {
                 }
             });
 
-        }
+//        }
     }
 
     /** {@inheritDoc} */

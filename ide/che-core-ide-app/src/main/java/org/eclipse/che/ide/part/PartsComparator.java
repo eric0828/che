@@ -40,17 +40,17 @@ public class PartsComparator implements Comparator<PartPresenter> {
             return 0;
         }
 
-        if ((constr1 != null && constr1.myAnchor == Anchor.FIRST) || (constr2 != null && constr2.myAnchor == Anchor.LAST)) {
+        if ((constr1 != null && constr1.getAnchor() == Anchor.FIRST) || (constr2 != null && constr2.getAnchor() == Anchor.LAST)) {
             return -1;
         }
 
-        if ((constr2 != null && constr2.myAnchor == Anchor.FIRST) || (constr1 != null && constr1.myAnchor == Anchor.LAST)) {
+        if ((constr2 != null && constr2.getAnchor() == Anchor.FIRST) || (constr1 != null && constr1.getAnchor() == Anchor.LAST)) {
             return 1;
         }
 
-        if (constr1 != null && constr1.myRelativeToActionId != null) {
-            Anchor anchor1 = constr1.myAnchor;
-            String relative1 = constr1.myRelativeToActionId;
+        if (constr1 != null && constr1.getRelativeId() != null) {
+            Anchor anchor1 = constr1.getAnchor();
+            Object relative1 = constr1.getRelativeId();
             if (anchor1 == Anchor.BEFORE && relative1.equals(title2)) {
                 return -1;
             }
@@ -59,9 +59,9 @@ public class PartsComparator implements Comparator<PartPresenter> {
             }
         }
 
-        if (constr2 != null && constr2.myRelativeToActionId != null) {
-            Anchor anchor2 = constr2.myAnchor;
-            String relative2 = constr2.myRelativeToActionId;
+        if (constr2 != null && constr2.getRelativeId() != null) {
+            Anchor anchor2 = constr2.getAnchor();
+            Object relative2 = constr2.getRelativeId();
             if (anchor2 == Anchor.BEFORE && relative2.equals(title1)) {
                 return 1;
             }

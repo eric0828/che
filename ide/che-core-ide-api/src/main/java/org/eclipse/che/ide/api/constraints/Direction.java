@@ -11,16 +11,15 @@
 package org.eclipse.che.ide.api.constraints;
 
 /**
- * Represents constraints for some action. Constraints are used to specify
- * action's position in the default group, see {@link org.eclipse.che.ide.api.action.DefaultActionGroup}.
- *
- * @author Evgen Vidolob
+ * @author Roman Nikitenko
  */
-public class Constraints extends AbstractConstraints {
-    public final static Constraints FIRST = new Constraints(Anchor.FIRST, null);
-    public final static Constraints LAST  = new Constraints(Anchor.LAST, null);
+public enum Direction {
 
-    public Constraints(Anchor anchor, String relativeToActionId) {
-        super(anchor, relativeToActionId);
-    }
+    NORTH,
+
+    SOUTH,
+
+    WEST,
+
+    EAST
 }

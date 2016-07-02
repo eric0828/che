@@ -92,15 +92,15 @@ public class DefaultActionGroup extends ActionGroup {
      *         ActionManager instance
      */
     public final void add(Action action, ActionManager actionManager) {
-        add(action, new Constraints(Anchor.LAST, null), actionManager);
+        add(action, Constraints.LAST, actionManager);
     }
 
     public final void add(Action action) {
-        addAction(action, new Constraints(Anchor.LAST, null));
+        addAction(action, Constraints.LAST);
     }
 
     public final void addAction(Action action) {
-        addAction(action, new Constraints(Anchor.LAST, null));
+        addAction(action, Constraints.LAST);
     }
 
     /** Adds a separator to the tail. */
@@ -214,23 +214,23 @@ public class DefaultActionGroup extends ActionGroup {
             // if action is added to result list, it needs to call
             // checkUnsorted method to look for another actions, that must be
             // before or after this action
-            if (constraints.myAnchor.equals(Anchor.FIRST)) {
+            if (constraints.getAnchor().equals(Anchor.FIRST)) {
                 result.add(0, action);
                 checkUnsorted(unsortedMap, action, result);
-            } else if (constraints.myAnchor.equals(Anchor.LAST)) {
+            } else if (constraints.getAnchor().equals(Anchor.LAST)) {
                 result.add(action);
                 checkUnsorted(unsortedMap, action, result);
             } else {
                 // find related action in result list, if found, add action
                 // before or after it. If not, add to unsorted map
-                int index = findIndex(constraints.myRelativeToActionId, result, actionManager);
+                int index = findIndex(constraints.getRelativeId(), result, actionManager);
                 if (index == -1) {
                     unsortedMap.put(action, constraints);
                 } else {
-                    if (constraints.myAnchor.equals(Anchor.BEFORE)) {
+                    if (constraints.getAnchor().equals(Anchor.BEFORE)) {
                         result.add(index, action);
                         checkUnsorted(unsortedMap, action, result);
-                    } else if (constraints.myAnchor.equals(Anchor.AFTER)) {
+                    } else if (constraints.getAnchor().equals(Anchor.AFTER)) {
                         result.add(index + 1, action);
                         checkUnsorted(unsortedMap, action, result);
                     }
@@ -267,10 +267,10 @@ public class DefaultActionGroup extends ActionGroup {
 
             // if dependant action constraints match depends on our action
             // add it to result and remove from unsorted list
-            if (relatedConstraints.myRelativeToActionId.equals(actionId)) {
-                if (relatedConstraints.myAnchor.equals(Anchor.BEFORE)) {
+            if ((relatedConstraints.getRelativeId()).equals(actionId)) {
+                if (relatedConstraints.getAnchor().equals(Anchor.BEFORE)) {
                     result.add(result.indexOf(action), relatedAction);
-                } else if (relatedConstraints.myAnchor.equals(Anchor.AFTER)) {
+                } else if (relatedConstraints.getAnchor().equals(Anchor.AFTER)) {
                     result.add(result.indexOf(action) + 1, relatedAction);
                 }
                 itr.remove();
