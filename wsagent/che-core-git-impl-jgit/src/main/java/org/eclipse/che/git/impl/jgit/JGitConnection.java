@@ -524,6 +524,8 @@ class JGitConnection implements GitConnection {
         try {
             String message = request.getMessage();
             GitUser committer = getUser();
+            boolean isAmend = request.isAmend();
+            boolean isAll = request.isAll();
             if (message == null) {
                 throw new GitException("Message wasn't set");
             }
@@ -533,9 +535,9 @@ class JGitConnection implements GitConnection {
 
             //Check that there are staged changes present for commit, or any changes if is 'isAll' enabled, otherwise throw exception
             Status status = status(StatusFormat.SHORT);
-            if (!request.isAll() && status.getAdded().isEmpty() && status.getChanged().isEmpty() && status.getRemoved().isEmpty()) {
+            if (!isAmend && !isAll && status.getAdded().isEmpty() && status.getChanged().isEmpty() && status.getRemoved().isEmpty()) {
                 throw new GitException("No changes added to commit");
-            } else if (request.isAll() && status.isClean()) {
+            } else if (!isAmend && isAll && status.isClean()) {
                 throw new GitException("Nothing to commit, working directory clean");
             }
 
@@ -550,7 +552,7 @@ class JGitConnection implements GitConnection {
                 return rev;
             }
 
-            if (request.isAmend() && !repository.getRepositoryState().canAmend()) {
+            if (isAmend && !repository.getRepositoryState().canAmend()) {
                 Revision rev = newDto(Revision.class);
                 rev.setMessage(String.format(MESSAGE_COMMIT_AMEND_NOT_POSSIBLE, repository.getRepositoryState().getDescription()));
                 return rev;
@@ -559,8 +561,8 @@ class JGitConnection implements GitConnection {
             CommitCommand commitCommand = getGit().commit()
                                                   .setCommitter(committerName, committerEmail).setAuthor(committerName, committerEmail)
                                                   .setMessage(message)
-                                                  .setAll(request.isAll())
-                                                  .setAmend(request.isAmend());
+                                                  .setAll(isAll)
+                                                  .setAmend(isAmend);
 
             // Check if repository is configured with Gerrit Support
             String gerritSupportConfigValue = repository.getConfig().getString(

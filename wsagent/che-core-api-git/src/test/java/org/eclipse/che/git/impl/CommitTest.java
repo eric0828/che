@@ -111,6 +111,22 @@ public class CommitTest {
         assertEquals(beforeCount, afterCount);
     }
 
+    @Test(dataProvider = "GitConnectionFactory", dataProviderClass = org.eclipse.che.git.impl.GitConnectionFactoryProvider.class)
+    public void testChangeMessageOfLastCommit(GitConnectionFactory connectionFactory) throws GitException, IOException {
+        //given
+        GitConnection connection = connectToGitRepositoryWithContent(connectionFactory, repository);
+        int commitsBefore = connection.log(newDto(LogRequest.class)).getCommits().size();
+
+        //when
+        CommitRequest commitRequest = newDto(CommitRequest.class).withMessage("Changed message").withAmend(true);
+        connection.commit(commitRequest);
+
+        //then
+        int commitsAfter = connection.log(newDto(LogRequest.class)).getCommits().size();
+        assertEquals(commitsBefore, commitsAfter);
+        assertEquals(connection.log(newDto(LogRequest.class)).getCommits().get(commitsAfter - 1).getMessage(), commitRequest.getMessage());
+    }
+
     @Test(dataProvider = "GitConnectionFactory", dataProviderClass = org.eclipse.che.git.impl.GitConnectionFactoryProvider.class,
           expectedExceptions = GitException.class)
     public void testCommitWithNotStagedChanges(GitConnectionFactory connectionFactory) throws GitException, IOException {
