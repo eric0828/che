@@ -84,7 +84,7 @@ public abstract class AbstractDebugger implements Debugger, DebuggerObservable {
     public static final String LOCAL_STORAGE_DEBUGGER_SESSION_KEY = "che-debugger-session";
     public static final String LOCAL_STORAGE_DEBUGGER_STATE_KEY   = "che-debugger-state";
 
-    protected final DtoFactory         dtoFactory;
+    protected final DtoFactory dtoFactory;
 
     private final List<DebuggerObserver> observers;
     private final DebuggerServiceClient  service;
@@ -92,7 +92,7 @@ public abstract class AbstractDebugger implements Debugger, DebuggerObservable {
     private final EventBus               eventBus;
     private final ActiveFileHandler      activeFileHandler;
     private final DebuggerManager        debuggerManager;
-    private final BreakpointManager breakpointManager;
+    private final BreakpointManager      breakpointManager;
     private final String                 debuggerType;
     private final String                 eventChannel;
 
@@ -164,7 +164,8 @@ public abstract class AbstractDebugger implements Debugger, DebuggerObservable {
             }
 
             @Override
-            public void onWsAgentStopped(WsAgentStateEvent event) {}
+            public void onWsAgentStopped(WsAgentStateEvent event) {
+            }
         });
 
         this.debuggerEventsHandler = new SubscriptionHandler<DebuggerEventDto>(new DebuggerEventUnmarshaller(dtoFactory)) {
@@ -313,19 +314,18 @@ public abstract class AbstractDebugger implements Debugger, DebuggerObservable {
     @Override
     public void addBreakpoint(final VirtualFile file, final int lineNumber) {
         if (isConnected()) {
-            LocationDto locationDto = dtoFactory.createDto(LocationDto.class);
-            locationDto.setLineNumber(lineNumber + 1);
-            locationDto.setResourcePath(file.getPath());
-
             String fqn = pathToFqn(file);
             if (fqn == null) {
                 return;
             }
-            locationDto.setTarget(fqn);
 
-            BreakpointDto breakpointDto = dtoFactory.createDto(BreakpointDto.class);
-            breakpointDto.setLocation(locationDto);
-            breakpointDto.setEnabled(true);
+            LocationDto locationDto = dtoFactory.createDto(LocationDto.class)
+                                                .withLineNumber(lineNumber + 1)
+                                                .withTarget(fqn)
+                                                .withResourcePath(file.getPath())
+                                                .withResourceProjectPath(file.getProject().getProjectConfig().getPath());
+
+            BreakpointDto breakpointDto = dtoFactory.createDto(BreakpointDto.class).withLocation(locationDto).withEnabled(true);
 
             Promise<Void> promise = service.addBreakpoint(debugSessionDto.getId(), breakpointDto);
             promise.then(new Operation<Void>() {
@@ -440,12 +440,13 @@ public abstract class AbstractDebugger implements Debugger, DebuggerObservable {
 
     protected void startDebugger(final DebugSessionDto debugSessionDto) {
         List<BreakpointDto> breakpoints = new ArrayList<>();
-        for (Breakpoint b : breakpointManager.getBreakpointList()) {
-            LocationDto locationDto = dtoFactory.createDto(LocationDto.class);
-            locationDto.setLineNumber(b.getLineNumber() + 1);
-            locationDto.setResourcePath(b.getPath());
+        for (Breakpoint breakpoint : breakpointManager.getBreakpointList()) {
+            LocationDto locationDto = dtoFactory.createDto(LocationDto.class)
+                                                .withLineNumber(breakpoint.getLineNumber() + 1)
+                                                .withResourcePath(breakpoint.getPath())
+                                                .withResourceProjectPath(breakpoint.getFile().getProject().getProjectConfig().getPath());
 
-            String target = pathToFqn(b.getFile());
+            String target = pathToFqn(breakpoint.getFile());
             if (target != null) {
                 locationDto.setTarget(target);
 
