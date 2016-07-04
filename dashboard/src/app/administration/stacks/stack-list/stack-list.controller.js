@@ -12,11 +12,11 @@
 
 /**
  * @ngdoc controller
- * @name administration.docker-registry.docker-registry-list.controller:DockerRegistryListController
- * @description This class is handling the controller for the docker registry's list
+ * @name administration.stacks.stack-list.controller:StackListController
+ * @description This class is handling the controller for the list of stacks
  * @author Oleksii Orel
  */
-export class DockerRegistryListController {
+export class StackListController {
 
   /**
    * Default constructor that is using resource
@@ -36,7 +36,7 @@ export class DockerRegistryListController {
       this.isLoading = false;
     }, (error) => {
       this.isLoading = false;
-      this.cheNotification.showError(error.data && error.data.message ? error.data.message : 'Load registry failed.');
+      this.cheNotification.showError(error.data && error.data.message ? error.data.message : 'Load stacks failed.');
     });
   }
 
@@ -52,7 +52,7 @@ export class DockerRegistryListController {
       controller: 'AddRegistryController',
       controllerAs: 'addRegistryController',
       parent: angular.element(this.$document.body),
-      templateUrl: 'app/administration/docker-registry/docker-registry-list/add-registry/add-registry.html'
+      templateUrl: 'app/administration/docker-registries/docker-registry-list/add-registry/add-registry.html'
     });
   }
 
@@ -71,7 +71,7 @@ export class DockerRegistryListController {
       controllerAs: 'editRegistryController',
       parent: angular.element(this.$document.body),
       locals: {registry: registry},
-      templateUrl: 'app/administration/docker-registry/docker-registry-list/edit-registry/edit-registry.html'
+      templateUrl: 'app/administration/docker-registries/docker-registry-list/edit-registry/edit-registry.html'
     });
   }
 

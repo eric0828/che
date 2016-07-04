@@ -33,6 +33,7 @@ export class ListWorkspacesCtrl {
     this.state = 'loading';
     this.isInfoLoading = true;
     this.workspaceFilter = {config: {name: ''}};
+    this.workspaceOrderBy = 'config.name';
 
     //Map of all workspaces with additional info by id:
     this.workspacesById = new Map();
@@ -71,6 +72,8 @@ export class ListWorkspacesCtrl {
         }
       }
     ];
+
+    this.isBulkChecked = false;
 
     $rootScope.showIDE = false;
   }
@@ -151,7 +154,7 @@ export class ListWorkspacesCtrl {
   /**
    * return true if all workspaces in list are checked
    * @returns {boolean}
-     */
+   */
   isAllWorkspacesSelected() {
     let disabled = true;
     for (let key of this.workspacesById.keys()) {
@@ -166,7 +169,7 @@ export class ListWorkspacesCtrl {
   /**
    * returns true if all workspaces in list are not checked
    * @returns {boolean}
-     */
+   */
   isNoWorkspacesSelected() {
     let workspaceIds = Object.keys(this.workspacesSelectedStatus);
     if (!workspaceIds.length) {
@@ -185,6 +188,7 @@ export class ListWorkspacesCtrl {
     for (let key of this.workspacesById.keys()) {
       this.workspacesSelectedStatus[key] = true;
     }
+    this.isBulkChecked = true;
   }
 
   /**
@@ -194,6 +198,31 @@ export class ListWorkspacesCtrl {
     Object.keys(this.workspacesSelectedStatus).forEach((key) => {
       this.workspacesSelectedStatus[key] = false;
     });
+    this.isBulkChecked = false;
+  }
+
+  /**
+   * Change bulk selection value
+   */
+  changeBulkSelection() {
+    if (this.isBulkChecked) {
+      this.deselectAllWorkspaces();
+      return;
+    }
+    this.selectAllWorkspaces();
+  }
+
+  /**
+   * Sets sort rule
+   */
+  setSortItem(item) {
+    if (!item || item.length === 0) {
+      return;
+    }
+    if (this.workspaceOrderBy === item) {
+      item = '-' + item;
+    }
+    this.workspaceOrderBy = item;
   }
 
   /**
@@ -275,7 +304,7 @@ export class ListWorkspacesCtrl {
    * Show confirmation popup before workspaces to delete
    * @param numberToDelete
    * @returns {*}
-     */
+   */
   showDeleteWorkspacesConfirmation(numberToDelete) {
     let confirmTitle = 'Would you like to delete ';
     if (numberToDelete > 1) {
@@ -293,5 +322,7 @@ export class ListWorkspacesCtrl {
       .clickOutsideToClose(true);
 
     return this.$mdDialog.show(confirm);
-  };
+  }
+
+;
 }

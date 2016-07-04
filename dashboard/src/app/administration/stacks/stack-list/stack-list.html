@@ -1,4 +1,3 @@
-<che-panel che-title="Docker Registries" che-title-icon="material-design icon-ic_widgets_24px">
   <div class="docker-registry-list">
     <md-progress-linear md-mode="indeterminate" ng-show="dockerRegistryListController.isLoading"></md-progress-linear>
     <div ng-show="!dockerRegistryListController.isLoading">
@@ -6,6 +5,8 @@
       <md-content class="registry-management-content">
         <div flex layout="row" layout-align="end center">
           <che-list flex ng-if="dockerRegistryListController.registries && dockerRegistryListController.registries.length > 0">
+
+
             <che-list-item ng-repeat="registry in dockerRegistryListController.registries | orderBy:'registry.username'" flex-gt-sm="100" flex="33"
                            ng-mouseover="hover=true"
                            ng-mouseout="hover=false">
@@ -26,6 +27,8 @@
               </span>
               </div>
             </che-list-item>
+
+
           </che-list>
           <div class="add-registry-button-container"
                layout-gt-sm="column" layout-align="end center">
@@ -40,4 +43,3 @@
       </md-content>
     </div>
   </div>
-</che-panel>

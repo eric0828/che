@@ -82,7 +82,7 @@ initModule.config(['$routeProvider', ($routeProvider) => {
 
 }]);
 
-var DEV = false;
+var DEV = true;
 
 
 // configs
@@ -322,8 +322,7 @@ initModule.config(($mdThemingProvider, jsonColors) => {
 
   $mdThemingProvider.theme('maincontent-theme')
     .primaryPalette('che')
-    .accentPalette('cheAccent')
-    .backgroundPalette('cheGrey');
+    .accentPalette('cheAccent');
 
 
 });

@@ -11,11 +11,11 @@
 
 -->
 <che-toolbar che-title="All Workspaces {{listWorkspacesCtrl.userWorkspaces.length ? '('+listWorkspacesCtrl.userWorkspaces.length+')' : ''}}"
-              che-add-button-name="New Workspace"
-              che-add-button-href="#/create-workspace"
-              che-dropdown-menu="listWorkspacesCtrl.menuOptions"
-              che-search-placeholder="Search for workspaces..."
-              che-search-model="listWorkspacesCtrl.workspaceFilter.config.name"></che-toolbar>
+             che-add-button-name="New Workspace"
+             che-add-button-href="#/create-workspace"
+             che-dropdown-menu="listWorkspacesCtrl.menuOptions"
+             che-search-placeholder="Search for workspaces..."
+             che-search-model="listWorkspacesCtrl.workspaceFilter.config.name"></che-toolbar>
 <md-content md-scroll-y flex layout="column" md-theme="maincontent-theme">
   <md-progress-linear md-mode="indeterminate" class="workspaces-list-progress"
                       ng-show="listWorkspacesCtrl.isInfoLoading"></md-progress-linear>
@@ -29,9 +29,56 @@
                       ng-show="(listWorkspacesCtrl.userWorkspaces | filter:listWorkspacesCtrl.workspaceFilter).length === 0">
         <span class="workspace-list-empty">- No workspaces found</span>
       </che-list-title>
+      <che-list-header flex>
+        <div flex="100"
+             layout="column" layout-gt-xs="row"
+             layout-align="start stretch"
+             class="workspace-item-row">
+
+          <div layout="column" layout-gt-xs="row"
+               layout-align="center center"
+               class="workspace-list-item-checkbox">
+            <div layout="row" layout-align="center center" class="che-list-item-checkbox-main">
+              <md-checkbox type="checkbox" class="che-list-item-checkbox"
+                           ng-checked="listWorkspacesCtrl.isBulkChecked"
+                           ng-click="listWorkspacesCtrl.changeBulkSelection()"></md-checkbox>
+            </div>
+          </div>
+
+          <div flex
+               layout-gt-xs="row" hide-xs
+               layout-align="start center"
+               class="workspace-item-details">
+
+            <div flex-gt-xs="33" class="header-column" ng-click="listWorkspacesCtrl.setSortItem('config.name');">
+              <span>Name</span>
+              <span class="sort-direction">
+                <i class="fa fa-sort-asc" ng-show="listWorkspacesCtrl.workspaceOrderBy === '-config.name'"></i>
+                <i class="fa fa-sort-desc" ng-show="listWorkspacesCtrl.workspaceOrderBy === 'config.name'"></i>
+              </span>
+            </div>
+            <div flex-gt-xs="33" class="header-column" ng-click="listWorkspacesCtrl.setSortItem('config.environments[0].machineConfigs[0].limits.ram');">
+              <span>RAM</span>
+              <span class="sort-direction">
+                <i class="fa fa-sort-asc" ng-show="listWorkspacesCtrl.workspaceOrderBy === '-config.environments[0].machineConfigs[0].limits.ram'"></i>
+                <i class="fa fa-sort-desc" ng-show="listWorkspacesCtrl.workspaceOrderBy === 'config.environments[0].machineConfigs[0].limits.ram'"></i>
+              </span>
+            </div>
+            <div flex-gt-xs="33"  class="header-column" ng-click="listWorkspacesCtrl.setSortItem('');">
+              <span>Actions</span>
+
+            </div>
+          </div>
+
+          <div flex="none" layout="row" layout-align="center center">
+
+
+          </div>
+        </div>
+      </che-list-header>
       <che-list ng-show="(listWorkspacesCtrl.userWorkspaces | filter:listWorkspacesCtrl.workspaceFilter).length > 0">
         <che-workspace-item
-                ng-repeat="workspace in listWorkspacesCtrl.userWorkspaces | orderBy:'config.name' | filter:listWorkspacesCtrl.workspaceFilter"
+                ng-repeat="workspace in listWorkspacesCtrl.userWorkspaces | orderBy:listWorkspacesCtrl.workspaceOrderBy | filter:listWorkspacesCtrl.workspaceFilter"
                 ng-model="listWorkspacesCtrl.workspacesSelectedStatus[workspace.id]"
                 che-selectable="true"
                 che-workspace-item="workspace"></che-workspace-item>

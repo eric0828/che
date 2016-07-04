@@ -37,6 +37,7 @@ import {CheLearnMoreTemplate} from './learn-more/che-learn-more-template.directi
 import {CheLink} from './link/che-link.directive';
 import {CheList} from './list/che-list.directive';
 import {CheListItem} from './list/che-list-item.directive';
+import {CheListHeader} from './list/che-list-header.directive';
 import {CheListTitle} from './list/che-list-title.directive';
 import {CheListItemChecked} from './list/che-list-item-checked.directive';
 import {CheLoader} from './loader/che-loader.directive';
@@ -100,6 +101,7 @@ export class WidgetConfig {
       .directive('cheListTitle', CheListTitle)
       .directive('cheList', CheList)
       .directive('cheListItem', CheListItem)
+      .directive('cheListHeader', CheListHeader)
 
       .directive('cheLoader', CheLoader)
       .directive('cheLoaderCrane', CheLoaderCrane)

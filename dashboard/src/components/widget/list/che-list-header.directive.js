@@ -11,22 +11,19 @@
 'use strict';
 
 /**
- * @ngdoc controller
- * @name administration.controller:AdministrationController
- * @description This class is handling the controller of the administration
+ * Defines a directive for creating List Header.
  * @author Oleksii Orel
  */
-export class AdministrationController {
-
+export class CheListHeader {
 
   /**
-   * Default constructor
+   * Default constructor that is using resource
    * @ngInject for Dependency injection
    */
-  constructor($rootScope) {
-    'ngInject';
-    $rootScope.showIDE = false;
-
-    this.loading = false;
+  constructor () {
+    this.restrict='E';
+    this.replace= true;
+    this.transclude= true;
+    this.templateUrl = 'components/widget/list/che-list-header.html';
   }
 }

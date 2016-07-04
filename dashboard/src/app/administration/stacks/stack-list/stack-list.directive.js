@@ -12,19 +12,19 @@
 
 /**
  * @ngdoc directive
- * @name administration.docker-registry.docker-registry-list.directive:dockerRegistryList
+ * @name administration.stacks.stack-list.directive:stackList
  * @restrict E
  * @element
  *
  * @description
- * <docker-registry-list></docker-registry-list>` for displaying list of registries.
+ * <stack-list></stack-list>` for displaying list of stacks.
  *
  * @usage
- *   <docker-registry-list></docker-registry-list>
+ *   <stack-list></stack-list>
  *
  * @author Oleksii Orel
  */
-export class DockerRegistryList {
+export class StackList {
 
   /**
    * Default constructor that is using resource
@@ -32,11 +32,11 @@ export class DockerRegistryList {
    */
   constructor() {
     this.restrict = 'E';
-    this.templateUrl = 'app/administration/docker-registry/docker-registry-list/docker-registry-list.html';
+    this.templateUrl = 'app/administration/stacks/stack-list/stack-list.html';
     this.replace = false;
 
-    this.controller = 'DockerRegistryListController';
-    this.controllerAs = 'dockerRegistryListController';
+    this.controller = 'StackListController';
+    this.controllerAs = 'stackListController';
 
     this.bindToController = true;
 

@@ -12,10 +12,13 @@
 
 
 import {AdministrationController} from './administration.controller';
-import {DockerRegistryList} from './docker-registry/docker-registry-list/docker-registry-list.directive';
-import {DockerRegistryListController} from './docker-registry/docker-registry-list/docker-registry-list.controller';
-import {AddRegistryController} from './docker-registry/docker-registry-list/add-registry/add-registry.controller';
-import {EditRegistryController} from './docker-registry/docker-registry-list/edit-registry/edit-registry.controller';
+import {DockerRegistryList} from './docker-registries/docker-registry-list/docker-registry-list.directive';
+import {DockerRegistryListController} from './docker-registries/docker-registry-list/docker-registry-list.controller';
+import {AddRegistryController} from './docker-registries/docker-registry-list/add-registry/add-registry.controller';
+import {EditRegistryController} from './docker-registries/docker-registry-list/edit-registry/edit-registry.controller';
+
+import {StackList} from './stacks/stack-list/stack-list.directive';
+import {StackListController} from './stacks/stack-list/stack-list.controller';
 
 
 export class AdministrationConfig {

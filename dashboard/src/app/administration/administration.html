@@ -13,6 +13,35 @@
 <che-toolbar che-title="Administration"
              che-add-button-name="New Project"
              che-add-button-href="#/create-project"></che-toolbar>
+<md-progress-linear md-mode="indeterminate" ng-show="administrationController.loading"></md-progress-linear>
 <md-content layout="column" class="dashboard-content" md-scroll-y flex>
-  <docker-registry-list></docker-registry-list>
+  <md-tabs md-dynamic-height md-stretch-tabs="always" md-selected="selectedIndex">
+    <md-tab>
+      <md-tab-label>
+        <md-icon md-font-icon="material-design icon-ic_settings_24px material-icons" class="che-tab-label-icon"></md-icon>
+        <span class="che-tab-label-title">Stacks</span>
+      </md-tab-label>
+      <md-tab-body>
+
+      </md-tab-body>
+    </md-tab>
+    <md-tab>
+      <md-tab-label>
+        <md-icon md-font-icon="fa fa-inbox" class="che-tab-label-icon"></md-icon>
+        <span class="che-tab-label-title">Templates</span>
+      </md-tab-label>
+      <md-tab-body>
+
+      </md-tab-body>
+    </md-tab>
+    <md-tab>
+      <md-tab-label>
+        <md-icon md-font-icon="fa fa-tasks" class="che-tab-label-icon"></md-icon>
+        <span class="che-tab-label-title">Docker Registries</span>
+      </md-tab-label>
+      <md-tab-body>
+        <docker-registry-list></docker-registry-list>
+      </md-tab-body>
+    </md-tab>
+  </md-tabs>
 </md-content>
